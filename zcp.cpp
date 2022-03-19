@@ -5,7 +5,7 @@
 #include "zcp.h"
 #include <iostream>
 using std::cerr;
-// using std::cout;
+using std::cout;
 using std::endl;
 using std::string;
 using std::ostream;
@@ -26,6 +26,10 @@ using std::istream;
 
 Zcp::State Zcp::compress(string &sig, ostream &osfile)
 {
+#if dbg_compress && 0
+	cout << "Buf: " << (int)szBuf << "  Win: " << szWin << endl;
+#endif
+
 	if (!osfile) {
 		cerr << "File Error" << endl;
 		return ZCP_ERROR;
@@ -36,7 +40,7 @@ Zcp::State Zcp::compress(string &sig, ostream &osfile)
 
 	while (cur < sig.size()) {
 		plc = match(sig, cur);
-#if dbg_compress
+#if dbg_compress && 0
 		cout << '(' << plc_getp(plc) << ' ';
 		cout << plc_getl(plc) << ' ';
 		cout << (char)plc_getc(plc) << ')' << endl;
@@ -119,20 +123,28 @@ Zcp::uint_plc Zcp::match(string &subSig, int_idx cur)
 
 	if (sigBegin < 0) sigBegin = 0;
 	if (sigEnd > sigSize) sigEnd = sigSize - 1;
+#if dbg_match && 1
+	cout << "original string" << endl;
+	cout << subSig.substr(cur, sigEnd - cur) << endl;
+	cout << subSig.substr(sigBegin, cur - sigBegin) << endl;
+#endif
+#if dbg_match && 0
+		cout << sigBegin << ' ' << cur << endl;
+#endif
 
 	for (int_idx i = sigEnd - cur; i >= 1; i -- ) {
-#if dbg_match
-		cout << cur << ' ' << i << endl;
-#endif
-		for (int_idx j = cur - 1; j >= sigBegin; j -- ) {
+		for (int_idx j = sigBegin; j < cur; j ++ ) {
 			string win = subSig.substr(j, i);
 			string buf = subSig.substr(cur, i);
-#if dbg_match
+#if dbg_match && 0
 			cout << win << endl;
 			cout << buf << endl;
 #endif
 
 			if (win == buf) {
+#if dbg_match && 0
+				cout << "match size: " << win.size() << endl;
+#endif
 				return plc_set(
 					cur - j,
 					i,

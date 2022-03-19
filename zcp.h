@@ -18,8 +18,8 @@ public:
 	typedef int32_t   int_idx32;
 	typedef int_idx32 int_idx;
 	typedef uint32_t  uint_plc;
-	typedef int16_t   int_buf;
-	typedef int8_t    int_win;
+	typedef int8_t    int_buf;
+	typedef int16_t   int_win;
 
 public:
 	Zcp(int_win szWin, int_buf szBuf)

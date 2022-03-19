@@ -7,8 +7,8 @@
 #include "zcp.h"
 using namespace std;
 
-const Zcp::int_win szWin = (Zcp::int_win)100;
-const Zcp::int_buf szBuf = (Zcp::int_buf)25;
+const Zcp::int_win szWin = (Zcp::int_win)32767;
+const Zcp::int_buf szBuf = (Zcp::int_buf)127;
 
 static const char state[4] = { '0', '1', 'x', 'z' };
 
@@ -19,13 +19,16 @@ string test_base_decompress();
 void test_accurate(int times);
 void test_cprate_compress(int times);
 
+void test_rac(int times);
+
 int main(int argc, char *argv[]) {
 	int times = 1;
 	if (argc > 1)
 		times = atoi(argv[1]);
 
 	// test_cprate_compress(times);
-	test_accurate(times);
+	// test_accurate(times);
+	test_rac(times);
 
 	return 0;
 }
@@ -52,8 +55,6 @@ void test_base_compress(string s) {
 }
 
 void test_cprate_compress(int times) {
-	srand((unsigned int)time(NULL));
-
 	string str = genStr(times);
 	fstream fs("__test_in.txt", ios::out);
 	fs << str;
@@ -79,4 +80,22 @@ void test_accurate(int times) {
 	else {
 		cout << "Fault" << endl;
 	}
+}
+
+void test_rac(int times) {
+	string s = genStr(times);
+	fstream fsin("__test_in.txt", ios::out);
+	fsin << s;
+
+	fstream fsout("__test_out.zcp", ios::app | ios::binary);
+
+	Zcp lz(szWin, szBuf);
+	lz.compress(s, fsout);
+	
+	// int len = 1000;
+	// for (int i = 0; i < s.size(); i += len) {
+	//     string stmp = s.substr(0, len);
+	//     lz.compress(stmp, fsout);
+	//     cout << fsout.tellp() << endl;
+	// }
 }
