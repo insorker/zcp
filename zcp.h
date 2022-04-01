@@ -11,8 +11,8 @@ public:
 		ZCP_SUCCESS = 0,
 		ZCP_ERROR,
 	} State;
-	// p | 16b | pos relative to c
-	// l |  8b | len of match
+	// p | 16b | [0, 1 << 16 - 1] | pos relative to c
+	// l |  8b | [0, 1 << 8 - 1]  | len of match
 	// c |  8b | first char after match
 	typedef int64_t   int_idx64;
 	typedef int32_t   int_idx32;

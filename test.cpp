@@ -8,7 +8,7 @@
 using namespace std;
 
 const Zcp::int_win szWin = (Zcp::int_win)32767;
-const Zcp::int_buf szBuf = (Zcp::int_buf)127;
+const Zcp::int_buf szBuf = (Zcp::int_buf)10;
 
 static const char state[4] = { '0', '1', 'x', 'z' };
 
