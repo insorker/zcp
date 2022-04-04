@@ -20,6 +20,7 @@ public:
 		for (int i = 0; i < len; i ++ ) {
 			this->str[i] = str[i];
 		}
+		this->sz = len;
 	}
 	
 	uint32_t size()

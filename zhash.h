@@ -22,6 +22,7 @@ public:
 	~ZHash()
 	{
 		delete head;
+		delete headlen;
 		delete list;
 	}
 
@@ -30,21 +31,23 @@ public:
 		hshd_t he = hash(p, mstr);
 		int    ls = p & SWIN_MASK;
 
-		list[ls].e  = p;
-		list[ls].ne = head[he];
 		if (list[ls].he != -1) {
 			headlen[he] -- ;
 		}
+		headlen[he] ++ ;
+
+		list[ls].e  = p;
+		list[ls].ne = head[he];
 		list[ls].he = he;
 		head[he]    = ls;
-		headlen[he] ++ ;
 	}
 
 	std::pair<mstr_t, mstr_t> query(mstr_t p, ZString &mstr)
 	{
 		hshd_t he   = hash(p, mstr);
-		if (head[he] == -1)
+		if (head[he] == -1) {
 			return std::make_pair(-1, -1);
+		}
 
 		mstr_t resp = -1, resl = -1;
 
@@ -57,12 +60,12 @@ public:
 				mstrp ++ ; pstrp ++ ; len ++ ;
 			}
 			if (len > resl) {
+				resp = pstrp;
 				resl = len;
-				resp = list[i].e;
 			}
 		}
 
-		return std::make_pair(resl, resp);
+		return std::make_pair(resp, resl);
 	}
 
 	bool match(mstr_t &i, mstr_t &j, ZString &str) {
@@ -90,6 +93,7 @@ private:
 
 	// the minimal size when comparing string
 	static const int M1 = 3;
+	// h shift
 	static const int S1 = 5;
 	// the largest size when comparing string
 	static const int M2 = BUFF_SIZE;
